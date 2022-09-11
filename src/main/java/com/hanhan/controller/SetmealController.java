@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -123,15 +124,18 @@ public class SetmealController {
      * @return
      */
     @PostMapping("/status/{status}")
-    public R<String> updateStatus(@PathVariable Integer status,Long ids){
+    public R<String> updateStatus(@PathVariable Integer status,@RequestParam List<Long> ids){
         log.info("status:{},ids:{}",status,ids);
         LambdaQueryWrapper<Setmeal> lqw = new LambdaQueryWrapper<>();
-        lqw.eq(Setmeal::getId,ids);
+        lqw.in(Setmeal::getId,ids);
 
-        Setmeal setmealServiceOne = setmealService.getOne(lqw);
-        setmealServiceOne.setStatus(status);
+        List<Setmeal> setmealList = setmealService.list(lqw);
+        setmealList.stream().map((item)->{
+            item.setStatus(status);
+            setmealService.updateById(item);
+            return item;
+        }).collect(Collectors.toList());
 
-        setmealService.updateById(setmealServiceOne);
         return R.success("修改售卖状态成功");
     }
 }

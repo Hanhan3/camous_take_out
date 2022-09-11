@@ -50,6 +50,10 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
         setmealDishService.saveBatch(setmealDishes);
     }
 
+    /**
+     * 删除套餐及其相关菜品
+     * @param ids
+     */
     @Override
     @Transactional
     public void deleteWithDish(List<Long> ids) {

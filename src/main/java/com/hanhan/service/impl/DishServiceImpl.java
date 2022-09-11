@@ -2,9 +2,12 @@ package com.hanhan.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hanhan.common.CustomException;
 import com.hanhan.dto.DishDto;
 import com.hanhan.entity.Dish;
 import com.hanhan.entity.FoodFlavor;
+import com.hanhan.entity.Setmeal;
+import com.hanhan.entity.SetmealDish;
 import com.hanhan.mapper.DishMapper;
 import com.hanhan.service.FoodFlavorService;
 import com.hanhan.service.DishService;
@@ -80,5 +83,27 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
         }).collect(Collectors.toList());
 
         foodFlavorService.saveBatch(flavors);
+    }
+
+    /**
+     * 删除菜品及其口味
+     * @param ids
+     */
+    @Override
+    public void deleteWithFlavor(List<Long> ids) {
+        //判断是否为启售状态，若是，则不能删除
+        LambdaQueryWrapper<Dish> dishlqw = new LambdaQueryWrapper<>();
+        dishlqw.in(Dish::getId,ids);
+        dishlqw.eq(Dish::getStatus,1);
+        int count = this.count(dishlqw);
+        if(count >0){
+            throw new CustomException("商品正在售卖中，不能删除");
+        }
+        //如可以删除，从dish表中删除
+        this.removeByIds(ids);
+        //从setmealDIsh表中删除
+        LambdaQueryWrapper<FoodFlavor> lqw = new LambdaQueryWrapper<>();
+        lqw.in(FoodFlavor::getDishId,ids);
+        foodFlavorService.remove(lqw);
     }
 }
