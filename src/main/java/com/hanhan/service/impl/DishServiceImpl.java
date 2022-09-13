@@ -65,6 +65,10 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
         return dishDto;
     }
 
+    /**
+     * 更新菜品表及其口味表
+     * @param dishDto
+     */
     @Override
     public void updateWithFlavor(DishDto dishDto) {
         //更新dish表基本信息

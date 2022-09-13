@@ -239,6 +239,11 @@ public class DishController {
         return R.success("修改售卖状态成功");
     }
 
+    /**
+     * 批量删除菜品
+     * @param ids
+     * @return
+     */
     @DeleteMapping
     public R<String> delete(@RequestParam List<Long> ids){
         log.info("ids:{}",ids);

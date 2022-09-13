@@ -30,3 +30,6 @@ spring:
     host: localhost
     port: 6379
     database: 0
+  cache:
+    redis:
+      time-to-live: 180000 #缓存有效期
