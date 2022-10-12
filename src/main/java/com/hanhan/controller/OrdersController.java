@@ -22,6 +22,11 @@ public class OrdersController {
     @Autowired
     private OrdersService ordersService;
 
+    /**
+     * 下单
+     * @param orders
+     * @return
+     */
     @PostMapping("/submit")
     public R<String> submit(@RequestBody Orders orders){
         log.info("oders:{}",orders);
@@ -29,8 +34,14 @@ public class OrdersController {
         return R.success("下单成功");
     }
 
+    /**
+     * 客户端订单页面
+     * @param page
+     * @param pageSize
+     * @return
+     */
     @GetMapping("/userPage")
-    public R<Page> page(Integer page,Integer pageSize){
+    public R<Page> userPage(Integer page,Integer pageSize){
         Page<Orders> pageInfo = new Page<>(page,pageSize);
 
         LambdaQueryWrapper<Orders> lqw = new LambdaQueryWrapper<>();
@@ -39,4 +50,30 @@ public class OrdersController {
         ordersService.page(pageInfo, lqw);
         return R.success(pageInfo);
     }
+
+    /**
+     * 管理端订单页面
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/page")
+    public R<Page> page(Integer page,Integer pageSize){
+        Page<Orders> pageInfo = new Page<>(page,pageSize);
+
+        //select * from Orders
+        LambdaQueryWrapper<Orders> lqw = new LambdaQueryWrapper<>();
+
+        ordersService.page(pageInfo, lqw);
+        return R.success(pageInfo);
+    }
+
+    @PutMapping
+    public R<Orders> updateStatus(@RequestBody Orders orders){
+        Orders order = ordersService.getById(orders.getId());
+        order.setStatus(orders.getStatus());
+        ordersService.updateById(order);
+        return R.success(order);
+    }
+
 }

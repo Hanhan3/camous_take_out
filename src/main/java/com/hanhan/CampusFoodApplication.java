@@ -8,9 +8,9 @@ import org.springframework.cache.annotation.EnableCaching;
 @Slf4j  //可以直接使用log(日志)           在控制台输出日志
 @SpringBootApplication
 @EnableCaching
-public class ReggieTakeOutApplication {
+public class CampusFoodApplication {
     public static void main(String[] args) {
-        SpringApplication.run(ReggieTakeOutApplication.class, args);
+        SpringApplication.run(CampusFoodApplication.class, args);
         log.info("项目启动...");
     }
 }

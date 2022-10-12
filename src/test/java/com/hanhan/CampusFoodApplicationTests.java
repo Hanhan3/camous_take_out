@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import javax.sql.DataSource;
 
 @SpringBootTest
-class ReggieTakeOutApplicationTests {
+class CampusFoodApplicationTests {
 
     @Autowired
     DataSource dataSource;
